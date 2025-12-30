@@ -1,40 +1,39 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { useSignIn } from "@clerk/clerk-expo";
-import { useNavigation } from "@react-navigation/native";
+import { useSignIn, useOAuth } from "@clerk/clerk-expo";
+import * as WebBrowser from "expo-web-browser";
 
-const SignInScreen = () => {
-  const { signIn, setActive, isLoaded } = useSignIn();
-  const navigation = useNavigation();
+WebBrowser.maybeCompleteAuthSession();
 
-  const onSignInPress = async () => {
+const SignInScreen = ({ navigation }) => {
+  const { isLoaded } = useSignIn();
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+
+  const onSignInWithGoogle = useCallback(async () => {
     if (!isLoaded) return;
-    
+
     try {
-      // This will open Clerk's sign-in modal
-      const result = await signIn.create({
-        strategy: "oauth_google",
-      });
-      
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        navigation.replace("HomeScreen");
+      const { createdSessionId, setActive } = await startOAuthFlow();
+
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        // Navigation handled by useAuth() in Navigation.js
       }
     } catch (err) {
-      console.error("Sign in error:", err);
+      console.error("Sign in error:", JSON.stringify(err, null, 2));
     }
-  };
+  }, [isLoaded, startOAuthFlow]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to SnapMap</Text>
       <Text style={styles.subtitle}>Sign in to continue</Text>
-      
-      <TouchableOpacity style={styles.button} onPress={onSignInPress}>
+
+      <TouchableOpacity style={styles.button} onPress={onSignInWithGoogle}>
         <Text style={styles.buttonText}>Sign In with Google</Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity 
+
+      <TouchableOpacity
         style={styles.linkButton}
         onPress={() => navigation.navigate("SignUpScreen")}
       >

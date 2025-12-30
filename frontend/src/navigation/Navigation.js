@@ -21,6 +21,31 @@ import ErrorScreen from "../screens/ErrorScreen";
 
 const Stack = createNativeStackNavigator();
 
+// Auth Stack - for unauthenticated users
+const AuthStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="SignInScreen" component={SignInScreen} />
+    <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+  </Stack.Navigator>
+);
+
+// App Stack - for authenticated users
+const AppStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="HomeScreen" component={HomeScreen} />
+    <Stack.Screen name="SplashScreen" component={SplashScreen} />
+    <Stack.Screen name="CameraScreen" component={CameraScreen} />
+    <Stack.Screen name="MapScreen" component={MapScreen} />
+    <Stack.Screen name="UploadConfirmationScreen" component={UploadConfirmationScreen} />
+    <Stack.Screen name="BubbleDetailsScreen" component={BubbleDetailsScreen} />
+    <Stack.Screen name="EventGalleryScreen" component={EventGalleryScreen} />
+    <Stack.Screen name="MyUploadsScreen" component={MyUploadsScreen} />
+    <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+    <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+    <Stack.Screen name="ErrorScreen" component={ErrorScreen} />
+  </Stack.Navigator>
+);
+
 // Loading screen while Clerk initializes
 const LoadingScreen = () => (
   <View style={styles.loadingContainer}>
@@ -38,30 +63,7 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isSignedIn ? (
-          // Auth screens - start with SignIn
-          <>
-            <Stack.Screen name="SignInScreen" component={SignInScreen} />
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-          </>
-        ) : (
-          // App screens (authenticated)
-          <>
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
-            <Stack.Screen name="SplashScreen" component={SplashScreen} />
-            <Stack.Screen name="CameraScreen" component={CameraScreen} />
-            <Stack.Screen name="MapScreen" component={MapScreen} />
-            <Stack.Screen name="UploadConfirmationScreen" component={UploadConfirmationScreen} />
-            <Stack.Screen name="BubbleDetailsScreen" component={BubbleDetailsScreen} />
-            <Stack.Screen name="EventGalleryScreen" component={EventGalleryScreen} />
-            <Stack.Screen name="MyUploadsScreen" component={MyUploadsScreen} />
-            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-            <Stack.Screen name="ErrorScreen" component={ErrorScreen} />
-          </>
-        )}
-      </Stack.Navigator>
+      {isSignedIn ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

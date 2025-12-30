@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^2.0.0",
+    "@clerk/clerk-expo": "^1.0.0",
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.10",
@@ -28,7 +28,8 @@
     "react-native-keyboard-controller": "~1.17.5",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.11.1"
+    "react-native-screens": "~4.11.1",
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
